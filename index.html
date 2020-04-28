@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type='text/javascript' src='knockout-3.5.1 .js'></script>
+
+
+</head>
+<body>
+
+    <table data-bind="foreach:Accounts">
+<tr >
+<td data-bind="text:Id"></td>
+<td data-bind="text:Name"></td>
+<td data-bind="text:Balance"></td>
+
+</tr>
+
+
+    </table>
+
+
+
+
+
+    <script>
+function Account(id,name,balance,status,tran){
+    this.Id=id;
+    this.Name=name;
+    this.Balance=balance;
+    this.Status=ko.observable(status);
+    this.Transaction=tran;
+}
+function  TransactionViewModel(parms){
+this.AccountHodersName=parms.AccountHodersName;
+this.AccountHodersName=parms.AccountHodersName;
+this.Amount=parms.Amount;
+}
+ko.components('transaction-component',{
+    viewModel :TransactionViewModel,
+
+    template: ' '
+
+
+})
+
+
+
+
+
+
+   var  myAccountViewModel=new function() {
+       this.allStatus=['Active','inActive','closed'];
+      this.Accounts=ko.observableArray([
+          new Account(1,"A1",1000,'Active',[100,-50,1000,-25]),
+          new Account(2,"A2",2000,'inactive',[100,-50,1000,-25]),
+          new Account(3,"A3",3000,'closed',[100,-50,1000,-25]),
+          new Account(4,"A4",4000,'Active',[100,-50,1000,-25]),
+          
+     ])  
+}
+ko.bindingHandlers.displayStatus={
+init:function(element, valueAccessor){
+    alert("init")
+
+},
+update:function(element, valueAccessor,allBindings){
+    alert("update")
+    var activeColor="green";
+    var inactiveColor="green";
+    var value=ko.unwrap(valueAccessor());
+     if(allBindings.has('color')){
+      activeColor=allBindings.get('color')[0];
+      inactiveColor=allBindings.get('color')[1];
+ }
+    switch (value.toLowerCase()){
+        case "active":
+        element.style['color']=activeColor;
+        element.style['text-decoration']='none';
+
+            break;
+        case "inactive":
+        element.style['color']=inactiveColor;
+        element.style['text-decoration']='none';
+
+
+            break; 
+        case "closed":
+        element.style['text-decoration']='line-through';
+        element.style['color']='black';
+
+         break;
+         default:
+             throw "invalid status";
+             break;
+    }
+
+
+
+}
+}
+ko.applyBindings(myAccountViewModel);
+
+
+    </script>
+</body>
+</html>
